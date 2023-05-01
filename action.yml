@@ -1,0 +1,35 @@
+name: "Setup Python Virtual Environment"
+decription: "Creates a Python virtual environment according to the given input requirements and run the given command"
+inputs:
+  python-version:
+    description: "Version of Python to use"
+    default: "3.8"
+  requirements-file:
+    description: "Requirements file listing package dependencies"
+    default: "requirements.txt"
+  constraints-file:
+    description: "Constraints file listing package constraints"
+    default: "constraints.txt"
+  run-command:
+    description: "Shell command with path to python script and parameters for the script execution"
+    default: "python test.py"
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Setup virtual environement and dependencies
+      run: |
+        pip install --upgrade pip
+        python3 -m venv env
+        source env/bin/activate
+        pip install -r ${{ inputs.requirements-file }} -c ${{ inputs.constraints-file }}
+      shell: bash
+    - name: Run script
+      run: |
+        source env/bin/activate
+        ${{ inputs.run-command }}
+      shell: bash

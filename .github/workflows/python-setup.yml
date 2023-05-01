@@ -1,0 +1,22 @@
+name: Setup Python Virtual Environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-python-venv:
+    runs-on: ubuntu-latest
+    name: Setup python virtual environement with requirements and constraints and runs script
+    steps:
+      - uses: actions/checkout@v3
+      - name: Before action
+        run: echo About to start action
+      - name: Setup Virtual Environment
+        uses: ./
+        with:
+          python-version: 3.8
+          requirements-file: requirements.txt
+          constraints-file: constraints.txt
+          run-command: python test.py
+      - name: After action
+        run: echo Finished action
